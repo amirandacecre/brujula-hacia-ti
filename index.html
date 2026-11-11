@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0b0e13">
+<title>Brújula hacia ti</title>
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    margin: 0; height: 100%; background: #0b0e13; color: #eceae3;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    overflow: hidden; overscroll-behavior: none; touch-action: none;
+    -webkit-user-select: none; user-select: none;
+  }
+  body::before {
+    content: ""; position: fixed; inset: 0; pointer-events: none;
+    background: radial-gradient(120% 90% at 50% 18%, #18202c 0%, #0b0e13 62%, #07090d 100%);
+  }
+  main {
+    position: relative; height: 100%; display: flex; flex-direction: column;
+    align-items: center; justify-content: space-between; text-align: center;
+    padding: calc(14px + env(safe-area-inset-top)) 18px calc(14px + env(safe-area-inset-bottom));
+  }
+  h1 {
+    font-size: 13px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase;
+    color: #8b95a6; margin: 6px 0 0;
+  }
+  #stage { width: min(94vw, 64vh); aspect-ratio: 1; }
+  svg { width: 100%; height: 100%; display: block; }
+  footer { width: 100%; max-width: 340px; }
+  #deg {
+    font-size: 30px; font-weight: 300; letter-spacing: .02em;
+    font-variant-numeric: tabular-nums; color: #eceae3; line-height: 1.1;
+  }
+  #card { font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: #6f7b8d; margin-top: 2px; }
+  #msg { font-size: 12.5px; line-height: 1.45; color: #7a8597; margin: 10px 0 0; }
+  button {
+    margin-top: 12px; padding: 13px 26px; font-size: 16px; font-weight: 600;
+    border: 0; border-radius: 999px; background: #c8372d; color: #fff;
+  }
+  button:active { background: #a92c23; }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<main>
+  <h1>El norte siempre está hacia ti</h1>
+
+  <div id="stage">
+    <svg viewBox="0 0 400 400" role="img"
+         aria-label="Brújula cuyo norte apunta siempre al borde inferior de la pantalla, hacia quien la mira">
+      <defs>
+        <linearGradient id="gRim" x1="0.15" y1="0" x2="0.85" y2="1">
+          <stop offset="0"   stop-color="#7d8798"/>
+          <stop offset="0.28" stop-color="#3a424f"/>
+          <stop offset="0.52" stop-color="#222935"/>
+          <stop offset="0.76" stop-color="#4a5361"/>
+          <stop offset="1"   stop-color="#8b94a4"/>
+        </linearGradient>
+        <linearGradient id="gBezel" x1="0.5" y1="0" x2="0.5" y2="1">
+          <stop offset="0" stop-color="#9aa3b2" stop-opacity="0.55"/>
+          <stop offset="1" stop-color="#0c1016" stop-opacity="0.75"/>
+        </linearGradient>
+        <radialGradient id="gFace" cx="0.5" cy="0.42" r="0.68">
+          <stop offset="0"   stop-color="#222b38"/>
+          <stop offset="0.55" stop-color="#161d27"/>
+          <stop offset="1"   stop-color="#0d1218"/>
+        </radialGradient>
+        <radialGradient id="gVig" cx="0.5" cy="0.5" r="0.5">
+          <stop offset="0.62" stop-color="#000" stop-opacity="0"/>
+          <stop offset="1"    stop-color="#000" stop-opacity="0.6"/>
+        </radialGradient>
+        <linearGradient id="gGlass" x1="0.18" y1="0.02" x2="0.62" y2="0.9">
+          <stop offset="0"    stop-color="#ffffff" stop-opacity="0.11"/>
+          <stop offset="0.38" stop-color="#ffffff" stop-opacity="0.025"/>
+          <stop offset="0.42" stop-color="#ffffff" stop-opacity="0"/>
+        </linearGradient>
+        <linearGradient id="gRed" x1="0.3" y1="0" x2="0.7" y2="0">
+          <stop offset="0"   stop-color="#e2574b"/>
+          <stop offset="0.48" stop-color="#c8372d"/>
+          <stop offset="0.5" stop-color="#ab2a21"/>
+          <stop offset="1"   stop-color="#7e1d17"/>
+        </linearGradient>
+        <linearGradient id="gWhite" x1="0.3" y1="0" x2="0.7" y2="0">
+          <stop offset="0"   stop-color="#f4f2ec"/>
+          <stop offset="0.48" stop-color="#d8dae0"/>
+          <stop offset="0.5" stop-color="#aeb4be"/>
+          <stop offset="1"   stop-color="#7d848f"/>
+        </linearGradient>
+        <radialGradient id="gCap" cx="0.36" cy="0.3" r="0.8">
+          <stop offset="0"   stop-color="#b9c1cd"/>
+          <stop offset="0.45" stop-color="#5d6672"/>
+          <stop offset="1"   stop-color="#1b212a"/>
+        </radialGradient>
+        <filter id="fShadow" x="-40%" y="-40%" width="180%" height="180%">
+          <feDropShadow dx="0" dy="7" stdDeviation="6" flood-color="#000" flood-opacity="0.55"/>
+        </filter>
+        <filter id="fSoft" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="3"/>
+        </filter>
+      </defs>
+
+      <!-- carcasa -->
+      <circle cx="200" cy="200" r="197" fill="url(#gRim)"/>
+      <circle cx="200" cy="200" r="197" fill="none" stroke="#0a0d12" stroke-width="1.5" stroke-opacity="0.8"/>
+      <circle cx="200" cy="200" r="181" fill="none" stroke="url(#gBezel)" stroke-width="7"/>
+      <circle cx="200" cy="200" r="177" fill="url(#gFace)"/>
+
+      <!-- graduación y rosa (generadas en JS) -->
+      <g id="gradus"></g>
+      <g id="rose"></g>
+
+      <!-- aguja -->
+      <g id="needle">
+        <g filter="url(#fShadow)">
+          <path d="M200,336 L206.5,214 L200,200 L193.5,214 Z" fill="url(#gRed)"/>
+          <path d="M200,64  L206.5,186 L200,200 L193.5,186 Z" fill="url(#gWhite)"/>
+        </g>
+        <path d="M200,336 L206.5,214 L200,200 L193.5,214 Z" fill="none" stroke="#5e1611" stroke-width="0.8" stroke-opacity="0.7"/>
+        <path d="M200,64  L206.5,186 L200,200 L193.5,186 Z" fill="none" stroke="#5c636d" stroke-width="0.8" stroke-opacity="0.7"/>
+        <circle cx="200" cy="200" r="13" fill="url(#gCap)"/>
+        <circle cx="200" cy="200" r="13" fill="none" stroke="#0b0e13" stroke-width="1" stroke-opacity="0.6"/>
+        <circle cx="200" cy="200" r="3.2" fill="#f0eee7" fill-opacity="0.85"/>
+      </g>
+
+      <!-- vidrio y viñeta -->
+      <circle cx="200" cy="200" r="177" fill="url(#gVig)" pointer-events="none"/>
+      <circle cx="200" cy="200" r="177" fill="url(#gGlass)" pointer-events="none"/>
+
+      <!-- índice fijo: hacia el usuario -->
+      <path d="M200,398 L190,378 L210,378 Z" fill="#c8372d"/>
+      <path d="M200,398 L190,378 L210,378 Z" fill="#e2574b" filter="url(#fSoft)" opacity="0.5"/>
+    </svg>
+  </div>
+
+  <footer>
+    <div id="deg">—</div>
+    <div id="card"></div>
+    <p id="msg">Gira el celular: la aguja oscila y siempre vuelve a apuntarte.</p>
+    <button id="btn" hidden>Activar brújula</button>
+  </footer>
+</main>
+
+<script>
+(function () {
+  "use strict";
+
+  var SVG = "http://www.w3.org/2000/svg";
+  var CX = 200, CY = 200;
+
+  /* ---------- dial: N abajo, es la rosa normal girada 180° ----------
+     Un azimut p (grados horarios desde el norte) se dibuja en pantalla
+     a (180 + p) grados desde arriba, es decir: N abajo, E a la
+     izquierda, S arriba, O a la derecha.                            */
+  function place(p, radius) {
+    var t = (180 + p) * Math.PI / 180;
+    return { x: CX + radius * Math.sin(t), y: CY - radius * Math.cos(t) };
+  }
+  function el(name, attrs, text) {
+    var n = document.createElementNS(SVG, name);
+    for (var k in attrs) n.setAttribute(k, attrs[k]);
+    if (text != null) n.textContent = text;
+    return n;
+  }
+
+  var gradus = document.getElementById("gradus");
+  for (var p = 0; p < 360; p += 2.5) {
+    var major = p % 15 === 0, cardinal = p % 45 === 0;
+    var outer = 170;
+    var len = cardinal ? 20 : major ? 14 : 7;
+    var a1 = place(p, outer), a2 = place(p, outer - len);
+    gradus.appendChild(el("line", {
+      x1: a1.x.toFixed(2), y1: a1.y.toFixed(2), x2: a2.x.toFixed(2), y2: a2.y.toFixed(2),
+      stroke: cardinal ? "#c3cad6" : major ? "#8a94a3" : "#434d5b",
+      "stroke-width": cardinal ? 2.6 : major ? 1.6 : 1,
+      "stroke-linecap": "round"
+    }));
+  }
+  /* numerales cada 30° */
+  for (var q = 0; q < 360; q += 30) {
+    if (q % 90 === 0) continue;
+    var n1 = place(q, 110);
+    gradus.appendChild(el("text", {
+      x: n1.x.toFixed(2), y: (n1.y + 4).toFixed(2), "text-anchor": "middle",
+      "font-family": "Georgia, 'Times New Roman', serif", "font-size": 12.5,
+      fill: "#5c6675"
+    }, String(q)));
+  }
+
+  /* rosa de los vientos */
+  var rose = document.getElementById("rose");
+  [["N", 0], ["E", 90], ["S", 180], ["O", 270]].forEach(function (c) {
+    var pt = place(c[1], 143);
+    var isN = c[1] === 0;
+    rose.appendChild(el("text", {
+      x: pt.x.toFixed(2), y: (pt.y + (isN ? 13 : 11)).toFixed(2), "text-anchor": "middle",
+      "font-family": "Georgia, 'Times New Roman', serif",
+      "font-size": isN ? 38 : 30, "font-weight": isN ? 700 : 400,
+      fill: isN ? "#d94b3d" : "#cfd5de"
+    }, c[0]));
+  });
+  [["NE", 45], ["SE", 135], ["SO", 225], ["NO", 315]].forEach(function (c) {
+    var pt = place(c[1], 139);
+    rose.appendChild(el("text", {
+      x: pt.x.toFixed(2), y: (pt.y + 5).toFixed(2), "text-anchor": "middle",
+      "font-family": "Georgia, 'Times New Roman', serif", "font-size": 14,
+      fill: "#6b788f", "letter-spacing": "0.08em"
+    }, c[0]));
+  });
+
+  /* ---------- física de la aguja ----------
+     Una brújula real tiene inercia: al girar el aparato la aguja se
+     queda un instante donde estaba y luego vuelve a su posición de
+     equilibrio oscilando. Aquí el equilibrio es "abajo", hacia quien
+     mira. Resorte amortiguado: a'' = -K·a - C·a'                   */
+  var OMEGA = 5.6;                       // frecuencia propia (~0.9 Hz)
+  var ZETA  = 0.21;                      // amortiguación (brújula de líquido)
+  var K = OMEGA * OMEGA;
+  var C = 2 * ZETA * OMEGA;
+  var STEP = 1 / 300;                    // paso fijo: estable a cualquier fps
+  var LIMIT = 165;                       // la aguja nunca se da la vuelta
+
+  var dev = 0, vel = 0, bank = 0;        // desviación (°), velocidad (°/s)
+  var rawHeading = 0, haveRaw = false;   // rumbo crudo del sensor
+  var fx = 0, fy = 1, fInit = false;     // filtro circular (vector unitario)
+  var prevFiltered = 0;
+
+  function norm(d) { return ((d + 180) % 360 + 360) % 360 - 180; }
+
+  var needle = document.getElementById("needle");
+  var degEl = document.getElementById("deg");
+  var cardEl = document.getElementById("card");
+  var msgEl = document.getElementById("msg");
+  var btn = document.getElementById("btn");
+
+  var NAMES = ["Norte", "Noreste", "Este", "Sureste", "Sur", "Suroeste", "Oeste", "Noroeste"];
+  var lastPrint = 0;
+
+  function filtered() { return Math.atan2(fx, fy) * 180 / Math.PI; }
+
+  var prevT = 0;
+  function tick(t) {
+    requestAnimationFrame(tick);
+    if (!prevT) { prevT = t; return; }
+    var dt = (t - prevT) / 1000; prevT = t;
+    if (dt > 0.1) dt = 0.1;                       // tras una pausa, no saltar
+
+    /* 1. filtro circular adaptativo del rumbo: mucho suavizado cuando
+          el celular está quieto (mata el ruido del sensor), poco
+          cuando se está girando de verdad (no introduce retardo).    */
+    if (haveRaw) {
+      var r = rawHeading * Math.PI / 180;
+      var tx = Math.sin(r), ty = Math.cos(r);
+      if (!fInit) { fx = tx; fy = ty; fInit = true; prevFiltered = filtered(); }
+      var gap = Math.abs(norm(rawHeading - filtered()));
+      var k = dt * (7 + gap * 2.2);
+      if (k > 1) k = 1;
+      fx += (tx - fx) * k; fy += (ty - fy) * k;
+      var m = Math.hypot(fx, fy) || 1; fx /= m; fy /= m;
+    }
+
+    /* 2. lo que el aparato giró en este fotograma desplaza la aguja en
+          sentido contrario: ella se queda fija en el mundo.          */
+    var now = filtered();
+    var turn = norm(now - prevFiltered);
+    prevFiltered = now;
+    if (Math.abs(turn) < 0.05) turn = 0;          // umbral de ruido
+    dev -= turn;
+    if (dev > LIMIT) dev = LIMIT;
+    if (dev < -LIMIT) dev = -LIMIT;
+
+    /* 3. resorte amortiguado con paso fijo */
+    bank += dt;
+    var guard = 0;
+    while (bank >= STEP && guard++ < 120) {
+      vel += (-K * dev - C * vel) * STEP;
+      dev += vel * STEP;
+      bank -= STEP;
+    }
+
+    /* 4. dibujar */
+    needle.setAttribute("transform", "rotate(" + dev.toFixed(3) + " 200 200)");
+
+    if (haveRaw && t - lastPrint > 110) {
+      lastPrint = t;
+      var h = (now % 360 + 360) % 360;
+      degEl.textContent = Math.round(h) + "°";
+      cardEl.textContent = NAMES[Math.round(h / 45) % 8];
+    }
+  }
+  requestAnimationFrame(tick);
+
+  /* ---------- sensores ----------
+     Algunos navegadores anuncian un sensor que en realidad no existe y
+     devuelven siempre el mismo valor. Por eso el sensor sólo se da por
+     bueno cuando sus lecturas varían de verdad; mientras no lo haga,
+     manda el dedo.                                                   */
+  var sensorLive = false, manual = false;
+  var lastSensorH = null, sensorMoves = 0;
+
+  function screenAngle() {
+    if (screen.orientation && typeof screen.orientation.angle === "number") return screen.orientation.angle;
+    if (typeof window.orientation === "number") return window.orientation;
+    return 0;
+  }
+
+  function feed(h) {
+    if (h == null || isNaN(h)) return;
+    rawHeading = h;
+    haveRaw = true;
+  }
+
+  function fromSensor(h) {
+    if (h == null || isNaN(h)) return;
+    h = (h + screenAngle()) % 360;
+    if (lastSensorH !== null && Math.abs(norm(h - lastSensorH)) > 0.8) sensorMoves++;
+    lastSensorH = h;
+    if (!sensorLive && sensorMoves >= 3) {
+      sensorLive = true; manual = false;
+      msgEl.textContent = "Sensor activo. Gira el celular sobre una superficie plana.";
+    }
+    if (!manual) feed(h);
+  }
+
+  function onOrient(e) {
+    if (typeof e.webkitCompassHeading === "number" && !isNaN(e.webkitCompassHeading)) {
+      fromSensor(e.webkitCompassHeading);                 // iOS: ya es rumbo
+    } else if (e.absolute === true && e.alpha != null) {
+      fromSensor(360 - e.alpha);                          // Android con brújula
+    }
+  }
+
+  function listen() {
+    if ("ondeviceorientationabsolute" in window) {
+      window.addEventListener("deviceorientationabsolute", onOrient, true);
+    }
+    window.addEventListener("deviceorientation", onOrient, true);
+    setTimeout(function () {
+      if (!sensorLive) {
+        msgEl.textContent = "Aquí no hay sensor disponible. Desliza el dedo en horizontal para simular el giro.";
+      }
+    }, 1800);
+  }
+
+  var needsPermission = typeof DeviceOrientationEvent !== "undefined" &&
+                        typeof DeviceOrientationEvent.requestPermission === "function";
+
+  if (needsPermission) {
+    btn.hidden = false;
+    msgEl.textContent = "Toca el botón para dar permiso al sensor de movimiento.";
+    btn.addEventListener("click", function () {
+      DeviceOrientationEvent.requestPermission().then(function (res) {
+        if (res === "granted") { btn.hidden = true; listen(); }
+        else { msgEl.textContent = "Permiso denegado. Desliza el dedo en horizontal para simular el giro."; }
+      })["catch"](function () {
+        msgEl.textContent = "No se pudo activar el sensor. Desliza el dedo en horizontal para simular el giro.";
+      });
+    });
+  } else if (typeof DeviceOrientationEvent !== "undefined") {
+    listen();
+  } else {
+    msgEl.textContent = "Este navegador no tiene sensor de orientación. Desliza el dedo en horizontal.";
+  }
+
+  /* ---------- simulación con el dedo (mientras no haya sensor) ---------- */
+  var dragX = null, dragFrom = 0, simHeading = 0;
+  window.addEventListener("pointerdown", function (e) {
+    if (e.target.tagName === "BUTTON") return;
+    dragX = e.clientX; dragFrom = e.clientX;
+  });
+  window.addEventListener("pointermove", function (e) {
+    if (dragX === null || sensorLive) return;
+    if (!manual && Math.abs(e.clientX - dragFrom) > 8) {
+      manual = true;                       // un arrastre real: toma el mando
+      simHeading = rawHeading;
+      msgEl.textContent = "Giro simulado con el dedo.";
+    }
+    if (!manual) return;
+    simHeading += (e.clientX - dragX) * 0.7;
+    dragX = e.clientX;
+    feed(simHeading);
+  });
+  function release() { dragX = null; }
+  window.addEventListener("pointerup", release);
+  window.addEventListener("pointercancel", release);
+
+  /* un pequeño empujón inicial para que se vea el carácter de la aguja */
+  dev = 26; vel = 0;
+})();
+</script>
+</body>
+</html>
